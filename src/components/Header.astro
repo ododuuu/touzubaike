@@ -2,72 +2,47 @@
 import { getCollection } from 'astro:content';
 import { SITE_TITLE } from '../consts';
 
-// Get data for mobile sidebar
 const allPosts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
-const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
 ---
 
 <header class="header">
-	<nav class="nav-container">
-		<a href="/" class="logo">
-			<span class="logo-text">{SITE_TITLE}</span>
-		</a>
-		<div class="nav-links">
-			<a href="/" class="nav-link">首頁</a>
-			<a href="/blog" class="nav-link">文章</a>
-			<a href="/about" class="nav-link">關於</a>
-		</div>
-		<button class="menu-toggle" aria-label="開啟選單" id="menu-toggle">
-			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<line x1="3" y1="6" x2="21" y2="6"></line>
-				<line x1="3" y1="12" x2="21" y2="12"></line>
-				<line x1="3" y1="18" x2="21" y2="18"></line>
-			</svg>
-		</button>
+	<div class="header-top">
+		<a href="/" class="logo">{SITE_TITLE}</a>
+	</div>
+	<nav class="nav">
+		<a href="/" class="nav-link">首頁</a>
+		<a href="/blog" class="nav-link">文章</a>
+		<a href="/about" class="nav-link">關於</a>
 	</nav>
+	<button class="menu-toggle" id="menu-toggle" aria-label="開啟選單">
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<line x1="3" y1="6" x2="21" y2="6"></line>
+			<line x1="3" y1="12" x2="21" y2="12"></line>
+			<line x1="3" y1="18" x2="21" y2="18"></line>
+		</svg>
+	</button>
 </header>
 
 <!-- Mobile Drawer -->
 <div class="mobile-drawer" id="mobile-drawer">
 	<div class="drawer-overlay" id="drawer-overlay"></div>
 	<div class="drawer-content">
-		<button class="drawer-close" id="drawer-close" aria-label="關閉選單">
-			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<line x1="18" y1="6" x2="6" y2="18"></line>
-				<line x1="6" y1="6" x2="18" y2="18"></line>
-			</svg>
-		</button>
-
+		<button class="drawer-close" id="drawer-close" aria-label="關閉選單">✕</button>
 		<nav class="drawer-nav">
-			<a href="/" class="drawer-link">首頁</a>
-			<a href="/blog" class="drawer-link">文章</a>
-			<a href="/about" class="drawer-link">關於</a>
+			<a href="/">首頁</a>
+			<a href="/blog">文章</a>
+			<a href="/about">關於</a>
 		</nav>
-
 		<div class="drawer-section">
-			<h3 class="drawer-title">關於本站</h3>
-			<p class="drawer-text">投資百科提供加密貨幣、股票、ETF 等投資理財教學。</p>
-		</div>
-
-		<div class="drawer-section">
-			<h3 class="drawer-title">熱門文章</h3>
-			<ul class="drawer-posts">
+			<h4>熱門文章</h4>
+			<ul>
 				{allPosts.slice(0, 5).map((post) => (
 					<li><a href={`/blog/${post.id}/`}>{post.data.title}</a></li>
 				))}
 			</ul>
 		</div>
-
-		{allTags.length > 0 && (
-			<div class="drawer-section">
-				<h3 class="drawer-title">標籤分類</h3>
-				<div class="drawer-tags">
-					{allTags.map((tag) => <span class="tag">{tag}</span>)}
-				</div>
-			</div>
-		)}
 	</div>
 </div>
 
@@ -81,7 +56,6 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
 		drawer?.classList.add('open');
 		document.body.style.overflow = 'hidden';
 	}
-
 	function closeDrawer() {
 		drawer?.classList.remove('open');
 		document.body.style.overflow = '';
@@ -94,61 +68,58 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
 
 <style>
 	.header {
-		position: sticky;
-		top: 0;
-		z-index: 100;
-		background: rgba(15, 15, 35, 0.8);
-		backdrop-filter: blur(20px);
-		border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+		background: var(--bg-header, rgba(15, 15, 26, 0.95));
+		border-bottom: 1px solid var(--border, #2d3748);
+		padding: 1rem 1.5rem;
+		text-align: center;
+		backdrop-filter: blur(10px);
 	}
 
-	.nav-container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 1rem 1.5rem;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
+	.header-top {
+		margin-bottom: 0.75rem;
 	}
 
 	.logo {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		text-decoration: none;
-		color: #f1f5f9;
+		font-size: 1.5rem;
 		font-weight: 700;
-		font-size: 1.125rem;
+		color: var(--text-primary, #f1f5f9);
+		text-decoration: none;
 	}
 
 	.logo:hover {
-		color: #a78bfa;
+		color: var(--accent, #d4a574);
+		text-decoration: none;
 	}
 
-	.nav-links {
+	.nav {
 		display: flex;
-		gap: 0.5rem;
+		justify-content: center;
+		gap: 2rem;
 	}
 
 	.nav-link {
-		padding: 0.5rem 1rem;
-		color: #94a3b8;
+		color: var(--text-secondary, #94a3b8);
 		text-decoration: none;
-		border-radius: 8px;
-		font-weight: 500;
-		transition: all 0.2s ease;
+		font-size: 0.9rem;
+		padding: 0.5rem 0;
+		border-bottom: 2px solid transparent;
+		transition: all 0.2s;
 	}
 
 	.nav-link:hover {
-		color: #f1f5f9;
-		background: rgba(124, 58, 237, 0.15);
+		color: var(--accent, #d4a574);
+		border-bottom-color: var(--accent, #d4a574);
+		text-decoration: none;
 	}
 
 	.menu-toggle {
 		display: none;
+		position: absolute;
+		right: 1rem;
+		top: 1rem;
 		background: none;
 		border: none;
-		color: #f1f5f9;
+		color: var(--text-primary, #f1f5f9);
 		cursor: pointer;
 		padding: 0.5rem;
 	}
@@ -172,13 +143,10 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
 
 	.drawer-overlay {
 		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: rgba(0, 0, 0, 0.5);
+		inset: 0;
+		background: rgba(0, 0, 0, 0.6);
 		opacity: 0;
-		transition: opacity 0.3s ease;
+		transition: opacity 0.3s;
 	}
 
 	.mobile-drawer.open .drawer-overlay {
@@ -190,13 +158,11 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
 		top: 0;
 		right: 0;
 		bottom: 0;
-		width: 300px;
-		max-width: 85vw;
-		background: #0f0f23;
-		border-left: 1px solid rgba(148, 163, 184, 0.1);
-		padding: 1.5rem;
+		width: 280px;
+		background: var(--bg-secondary, #1a1a2e);
+		padding: 1rem;
 		transform: translateX(100%);
-		transition: transform 0.3s ease;
+		transition: transform 0.3s;
 		overflow-y: auto;
 	}
 
@@ -206,100 +172,65 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
 
 	.drawer-close {
 		position: absolute;
-		top: 1rem;
-		right: 1rem;
+		top: 0.75rem;
+		right: 0.75rem;
 		background: none;
 		border: none;
-		color: #94a3b8;
+		font-size: 1.25rem;
 		cursor: pointer;
-		padding: 0.5rem;
-	}
-
-	.drawer-close:hover {
-		color: #f1f5f9;
+		color: var(--text-secondary, #94a3b8);
 	}
 
 	.drawer-nav {
+		margin-top: 2.5rem;
 		display: flex;
 		flex-direction: column;
-		gap: 0.25rem;
-		margin-top: 2rem;
-		margin-bottom: 2rem;
-		padding-bottom: 1.5rem;
-		border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+		gap: 0.5rem;
+		padding-bottom: 1rem;
+		border-bottom: 1px solid var(--border, #2d3748);
+		margin-bottom: 1rem;
 	}
 
-	.drawer-link {
-		padding: 0.75rem 1rem;
-		color: #f1f5f9;
-		text-decoration: none;
+	.drawer-nav a {
+		padding: 0.75rem 0;
+		color: var(--text-primary, #f1f5f9);
 		font-weight: 500;
-		border-radius: 8px;
-		transition: background 0.2s;
+		text-decoration: none;
 	}
 
-	.drawer-link:hover {
-		background: rgba(124, 58, 237, 0.15);
-	}
-
-	.drawer-section {
-		margin-bottom: 1.5rem;
-	}
-
-	.drawer-title {
+	.drawer-section h4 {
 		font-size: 0.75rem;
-		font-weight: 600;
-		color: #64748b;
 		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-bottom: 0.75rem;
+		color: var(--text-muted, #64748b);
+		margin-bottom: 0.5rem;
 	}
 
-	.drawer-text {
-		font-size: 0.875rem;
-		color: #94a3b8;
-		line-height: 1.6;
-		margin: 0;
-	}
-
-	.drawer-posts {
+	.drawer-section ul {
 		list-style: none;
 		padding: 0;
 		margin: 0;
 	}
 
-	.drawer-posts li {
+	.drawer-section li {
 		margin-bottom: 0.5rem;
 	}
 
-	.drawer-posts a {
+	.drawer-section a {
 		font-size: 0.875rem;
-		color: #cbd5e1;
+		color: var(--text-secondary, #94a3b8);
 		text-decoration: none;
-		line-height: 1.4;
 	}
 
-	.drawer-posts a:hover {
-		color: #a78bfa;
+	.drawer-section a:hover {
+		color: var(--accent, #d4a574);
 	}
 
-	.drawer-tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-	}
+	@media (max-width: 768px) {
+		.header {
+			position: relative;
+		}
 
-	.tag {
-		padding: 0.25rem 0.75rem;
-		background: rgba(124, 58, 237, 0.15);
-		color: #a78bfa;
-		border-radius: 999px;
-		font-size: 0.75rem;
-		font-weight: 500;
-	}
-
-	@media (max-width: 640px) {
-		.nav-links {
+		.nav {
 			display: none;
 		}
 

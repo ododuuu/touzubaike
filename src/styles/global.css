@@ -1,25 +1,47 @@
 @import "tailwindcss";
 
-/* ===== Modern Dark Theme with Gradient Accents ===== */
+/* ===== 投資百科 - 深色主題 ===== */
+
 :root {
-	--accent: #7c3aed;
-	/* Purple */
-	--accent-light: #a78bfa;
-	--accent-gradient: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
-	--bg-primary: #0f0f23;
+	/* 背景 */
+	--bg-primary: #0f0f1a;
 	--bg-secondary: #1a1a2e;
-	--bg-card: rgba(26, 26, 46, 0.8);
+	--bg-card: #16213e;
+	--bg-header: rgba(15, 15, 26, 0.95);
+
+	/* 文字 */
 	--text-primary: #f1f5f9;
 	--text-secondary: #94a3b8;
-	--border-color: rgba(148, 163, 184, 0.1);
+	--text-muted: #64748b;
+
+	/* 強調色（金色） */
+	--accent: #d4a574;
+	--accent-hover: #e8c19a;
+
+	/* 連結 */
+	--link: #60a5fa;
+	--link-hover: #93c5fd;
+
+	/* 邊框 */
+	--border: #2d3748;
+	--border-light: #374151;
+
+	/* 陰影 */
+	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 * {
 	box-sizing: border-box;
 }
 
+html {
+	scroll-behavior: smooth;
+}
+
 body {
-	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+		'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
 	margin: 0;
 	padding: 0;
 	background: var(--bg-primary);
@@ -29,29 +51,7 @@ body {
 	min-height: 100vh;
 }
 
-/* Background gradient effect */
-body::before {
-	content: '';
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background:
-		radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 58, 237, 0.15), transparent),
-		radial-gradient(ellipse 60% 40% at 100% 0%, rgba(37, 99, 235, 0.1), transparent);
-	pointer-events: none;
-	z-index: -1;
-}
-
-main {
-	width: 100%;
-	max-width: 800px;
-	margin: 0 auto;
-	padding: 2rem 1.5rem;
-}
-
-/* Typography */
+/* ===== Typography ===== */
 h1,
 h2,
 h3,
@@ -65,11 +65,11 @@ h6 {
 }
 
 h1 {
-	font-size: 2.5rem;
+	font-size: 2.25rem;
 }
 
 h2 {
-	font-size: 1.75rem;
+	font-size: 1.5rem;
 	margin-top: 2.5rem;
 }
 
@@ -84,74 +84,102 @@ p {
 }
 
 a {
-	color: var(--accent-light);
+	color: var(--link);
 	text-decoration: none;
 	transition: color 0.2s ease;
 }
 
 a:hover {
-	color: var(--accent);
+	color: var(--link-hover);
 }
 
-/* Cards */
+strong {
+	color: var(--text-primary);
+}
+
+/* ===== Layout ===== */
+.container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1.5rem;
+}
+
+main {
+	width: 100%;
+}
+
+/* ===== Cards ===== */
 .card {
 	background: var(--bg-card);
-	border: 1px solid var(--border-color);
-	border-radius: 16px;
-	padding: 1.5rem;
-	backdrop-filter: blur(10px);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	overflow: hidden;
 	transition: all 0.3s ease;
 }
 
 .card:hover {
 	border-color: var(--accent);
-	transform: translateY(-4px);
-	box-shadow: 0 20px 40px rgba(124, 58, 237, 0.15);
+	box-shadow: var(--shadow-md);
+	transform: translateY(-2px);
 }
 
-/* Buttons */
+/* ===== Tags ===== */
+.tag {
+	display: inline-block;
+	padding: 0.2rem 0.6rem;
+	background: var(--bg-secondary);
+	color: var(--accent);
+	border-radius: 4px;
+	font-size: 0.75rem;
+	font-weight: 500;
+	text-decoration: none;
+	border: 1px solid var(--border);
+}
+
+.tag:hover {
+	background: var(--accent);
+	color: var(--bg-primary);
+	border-color: var(--accent);
+	text-decoration: none;
+}
+
+/* ===== Buttons ===== */
 .btn {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
-	padding: 0.75rem 1.5rem;
-	background: var(--accent-gradient);
-	color: white;
+	padding: 0.6rem 1.2rem;
+	background: var(--accent);
+	color: var(--bg-primary);
 	border: none;
-	border-radius: 8px;
+	border-radius: 4px;
 	font-weight: 600;
+	font-size: 0.875rem;
 	cursor: pointer;
+	text-decoration: none;
 	transition: all 0.2s ease;
 }
 
 .btn:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+	background: var(--accent-hover);
+	color: var(--bg-primary);
+	text-decoration: none;
 }
 
-/* Tags */
-.tag {
-	display: inline-block;
-	padding: 0.25rem 0.75rem;
-	background: rgba(124, 58, 237, 0.15);
-	color: var(--accent-light);
-	border-radius: 999px;
-	font-size: 0.75rem;
-	font-weight: 500;
-}
-
-/* Tables */
+/* ===== Tables ===== */
 table {
 	width: 100%;
 	border-collapse: collapse;
 	margin: 1.5rem 0;
+	font-size: 0.9rem;
 }
 
 th,
 td {
 	padding: 0.75rem 1rem;
 	text-align: left;
-	border-bottom: 1px solid var(--border-color);
+	border: 1px solid var(--border);
 }
 
 th {
@@ -164,35 +192,38 @@ td {
 	color: var(--text-secondary);
 }
 
-/* Code blocks */
+/* ===== Code ===== */
 code {
-	padding: 0.2rem 0.5rem;
+	padding: 0.2rem 0.4rem;
 	background: var(--bg-secondary);
-	border-radius: 4px;
-	font-size: 0.9em;
-	color: var(--accent-light);
+	border-radius: 3px;
+	font-size: 0.875em;
+	color: var(--accent);
+	font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
 pre {
-	background: var(--bg-secondary);
-	border: 1px solid var(--border-color);
-	border-radius: 12px;
-	padding: 1.25rem;
+	background: #1a1a2e;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	padding: 1rem;
 	overflow-x: auto;
+	font-size: 0.875rem;
 }
 
 pre>code {
 	background: none;
 	padding: 0;
+	color: var(--text-primary);
 }
 
-/* Blockquotes */
+/* ===== Blockquotes ===== */
 blockquote {
 	margin: 1.5rem 0;
-	padding: 1rem 1.5rem;
-	background: rgba(124, 58, 237, 0.1);
+	padding: 1rem 1.25rem;
+	background: rgba(212, 165, 116, 0.1);
 	border-left: 4px solid var(--accent);
-	border-radius: 0 12px 12px 0;
+	border-radius: 0 6px 6px 0;
 }
 
 blockquote p {
@@ -200,33 +231,38 @@ blockquote p {
 	color: var(--text-primary);
 }
 
-/* Images */
+/* ===== Images ===== */
 img {
 	max-width: 100%;
 	height: auto;
-	border-radius: 12px;
+	border-radius: 8px;
 }
 
-/* Lists */
+/* ===== Lists ===== */
 ul,
 ol {
 	color: var(--text-secondary);
 	padding-left: 1.5rem;
+	margin-bottom: 1.25rem;
 }
 
 li {
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.4rem;
 }
 
-/* Horizontal rule */
+li::marker {
+	color: var(--accent);
+}
+
+/* ===== Horizontal Rule ===== */
 hr {
 	border: none;
 	height: 1px;
-	background: var(--border-color);
+	background: var(--border);
 	margin: 2rem 0;
 }
 
-/* Screen reader only */
+/* ===== Utility ===== */
 .sr-only {
 	position: absolute;
 	width: 1px;
@@ -238,17 +274,17 @@ hr {
 	border: 0;
 }
 
-/* Responsive */
-@media (max-width: 640px) {
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
 	h1 {
 		font-size: 1.75rem;
 	}
 
 	h2 {
-		font-size: 1.5rem;
+		font-size: 1.25rem;
 	}
 
-	main {
-		padding: 1rem;
+	.container {
+		padding: 0 1rem;
 	}
 }
