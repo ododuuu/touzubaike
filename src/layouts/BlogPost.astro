@@ -1,86 +1,442 @@
 ---
-import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & { currentSlug?: string; headings?: { depth: number; slug: string; text: string }[] };
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags = [] } = Astro.props;
+const headings = Astro.props.headings || [];
+
+// Get all posts for sidebar
+const allPosts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// Get all unique tags
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
+
+const formattedDate = pubDate.toLocaleDateString('zh-TW', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+
+// Filter headings for TOC (only H2 and H3)
+const tocItems = headings.filter(h => h.depth === 2 || h.depth === 3);
 ---
 
-<html lang="en">
+<html lang="zh-TW">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
 	</head>
-
 	<body>
 		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
+		<div class="page-layout">
+			<main class="main-content">
+				<article class="article">
+					<header class="article-header">
+						<div class="article-meta">
+							<time datetime={pubDate.toISOString()}>{formattedDate}</time>
+							{tags.length > 0 && (
+								<div class="article-tags">
+									{tags.map((tag) => <span class="tag">{tag}</span>)}
+								</div>
+							)}
 						</div>
-						<h1>{title}</h1>
-						<hr />
+						<h1 class="article-title">{title}</h1>
+						<p class="article-description">{description}</p>
+					</header>
+
+					{/* Table of Contents */}
+					{tocItems.length > 0 && (
+						<nav class="toc">
+							<div class="toc-header">
+								<span class="toc-title">內容目錄</span>
+							</div>
+							<ol class="toc-list">
+								{tocItems.map((heading, index) => (
+									<li class={`toc-item toc-depth-${heading.depth}`}>
+										<a href={`#${heading.slug}`}>
+											{heading.depth === 2 && <span class="toc-number">{String(index + 1).padStart(2, '0')}</span>}
+											{heading.text}
+										</a>
+									</li>
+								))}
+							</ol>
+						</nav>
+					)}
+
+					<div class="article-content prose">
+						<slot />
 					</div>
-					<slot />
+
+					<nav class="article-nav">
+						<a href="/blog" class="back-link">← 返回文章列表</a>
+					</nav>
+				</article>
+			</main>
+
+			<aside class="sidebar">
+				<div class="sidebar-section">
+					<h3 class="sidebar-title">關於本站</h3>
+					<p class="sidebar-text">投資百科提供加密貨幣、股票、ETF 等投資理財教學，幫助您做出明智的投資決策。</p>
 				</div>
-			</article>
-		</main>
+
+				<div class="sidebar-section">
+					<h3 class="sidebar-title">熱門文章</h3>
+					<ul class="popular-posts">
+						{allPosts.slice(0, 5).map((post) => (
+							<li>
+								<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+							</li>
+						))}
+					</ul>
+				</div>
+
+				{allTags.length > 0 && (
+					<div class="sidebar-section">
+						<h3 class="sidebar-title">標籤分類</h3>
+						<div class="tag-cloud">
+							{allTags.map((tag) => (
+								<span class="tag">{tag}</span>
+							))}
+						</div>
+					</div>
+				)}
+			</aside>
+		</div>
 		<Footer />
+
+		<style>
+			.page-layout {
+				display: grid;
+				grid-template-columns: 1fr 280px;
+				gap: 3rem;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2rem 1.5rem;
+			}
+
+			.main-content {
+				min-width: 0;
+			}
+
+			.article-header {
+				padding-bottom: 2rem;
+				border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+				margin-bottom: 2rem;
+			}
+
+			.article-meta {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				margin-bottom: 1rem;
+				flex-wrap: wrap;
+			}
+
+			.article-meta time {
+				color: #64748b;
+				font-size: 0.875rem;
+			}
+
+			.article-tags {
+				display: flex;
+				gap: 0.5rem;
+			}
+
+			.tag {
+				padding: 0.25rem 0.75rem;
+				background: rgba(124, 58, 237, 0.15);
+				color: #a78bfa;
+				border-radius: 999px;
+				font-size: 0.75rem;
+				font-weight: 500;
+			}
+
+			.article-title {
+				font-size: 2rem;
+				font-weight: 800;
+				line-height: 1.2;
+				margin-bottom: 1rem;
+			}
+
+			.article-description {
+				font-size: 1.125rem;
+				color: #94a3b8;
+				margin: 0;
+			}
+
+			/* Table of Contents */
+			.toc {
+				background: rgba(26, 26, 46, 0.6);
+				border: 1px solid rgba(148, 163, 184, 0.1);
+				border-radius: 16px;
+				padding: 1.5rem;
+				margin-bottom: 2rem;
+			}
+
+			.toc-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 1rem;
+				padding-bottom: 0.75rem;
+				border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+			}
+
+			.toc-title {
+				font-size: 1rem;
+				font-weight: 600;
+				color: #f1f5f9;
+			}
+
+			.toc-list {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.toc-item {
+				margin-bottom: 0.5rem;
+			}
+
+			.toc-item a {
+				display: flex;
+				align-items: baseline;
+				gap: 0.75rem;
+				color: #94a3b8;
+				text-decoration: none;
+				font-size: 0.9rem;
+				line-height: 1.5;
+				padding: 0.25rem 0;
+				transition: color 0.2s;
+			}
+
+			.toc-item a:hover {
+				color: #a78bfa;
+			}
+
+			.toc-number {
+				color: #64748b;
+				font-size: 0.75rem;
+				font-weight: 500;
+				min-width: 1.5rem;
+			}
+
+			.toc-depth-3 {
+				padding-left: 2rem;
+			}
+
+			.toc-depth-3 a {
+				font-size: 0.85rem;
+				color: #64748b;
+			}
+
+			.toc-depth-3 a::before {
+				content: "•";
+				margin-right: 0.5rem;
+				color: #475569;
+			}
+
+			/* Prose styles */
+			.prose {
+				line-height: 1.8;
+			}
+
+			.prose :global(h2) {
+				font-size: 1.5rem;
+				margin-top: 3rem;
+				padding-top: 1.5rem;
+				border-top: 1px solid rgba(148, 163, 184, 0.1);
+				scroll-margin-top: 100px;
+			}
+
+			.prose :global(h3) {
+				font-size: 1.25rem;
+				margin-top: 2rem;
+				scroll-margin-top: 100px;
+			}
+
+			.prose :global(p) {
+				margin-bottom: 1.5rem;
+			}
+
+			.prose :global(ul),
+			.prose :global(ol) {
+				margin-bottom: 1.5rem;
+				padding-left: 1.5rem;
+			}
+
+			.prose :global(li) {
+				margin-bottom: 0.5rem;
+				color: #cbd5e1;
+			}
+
+			.prose :global(strong) {
+				color: #f1f5f9;
+				font-weight: 600;
+			}
+
+			.prose :global(a) {
+				color: #a78bfa;
+				text-decoration: underline;
+				text-underline-offset: 2px;
+			}
+
+			.prose :global(blockquote) {
+				margin: 2rem 0;
+				padding: 1rem 1.5rem;
+				background: rgba(124, 58, 237, 0.1);
+				border-left: 4px solid #7c3aed;
+				border-radius: 0 12px 12px 0;
+			}
+
+			.prose :global(blockquote p) {
+				margin: 0;
+				color: #e2e8f0;
+			}
+
+			.prose :global(table) {
+				width: 100%;
+				margin: 1.5rem 0;
+				border-collapse: collapse;
+			}
+
+			.prose :global(th),
+			.prose :global(td) {
+				padding: 0.75rem 1rem;
+				border: 1px solid rgba(148, 163, 184, 0.2);
+				text-align: left;
+			}
+
+			.prose :global(th) {
+				background: rgba(26, 26, 46, 0.8);
+				font-weight: 600;
+				color: #f1f5f9;
+			}
+
+			.prose :global(td) {
+				color: #cbd5e1;
+			}
+
+			.prose :global(code) {
+				padding: 0.2rem 0.5rem;
+				background: rgba(26, 26, 46, 0.8);
+				border-radius: 4px;
+				font-size: 0.9em;
+				color: #a78bfa;
+			}
+
+			.article-nav {
+				margin-top: 4rem;
+				padding-top: 2rem;
+				border-top: 1px solid rgba(148, 163, 184, 0.1);
+			}
+
+			.back-link {
+				color: #94a3b8;
+				text-decoration: none;
+				font-weight: 500;
+			}
+
+			.back-link:hover {
+				color: #a78bfa;
+			}
+
+			/* Sidebar */
+			.sidebar {
+				position: sticky;
+				top: 100px;
+				height: fit-content;
+			}
+
+			.sidebar-section {
+				background: rgba(26, 26, 46, 0.6);
+				border: 1px solid rgba(148, 163, 184, 0.1);
+				border-radius: 16px;
+				padding: 1.25rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.sidebar-title {
+				font-size: 0.875rem;
+				font-weight: 600;
+				color: #f1f5f9;
+				margin-bottom: 0.75rem;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+			}
+
+			.sidebar-text {
+				font-size: 0.875rem;
+				color: #94a3b8;
+				line-height: 1.6;
+				margin: 0;
+			}
+
+			.popular-posts {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.popular-posts li {
+				margin-bottom: 0.75rem;
+			}
+
+			.popular-posts a {
+				font-size: 0.875rem;
+				color: #cbd5e1;
+				text-decoration: none;
+				line-height: 1.4;
+				display: block;
+				transition: color 0.2s;
+			}
+
+			.popular-posts a:hover {
+				color: #a78bfa;
+			}
+
+			.tag-cloud {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+
+			@media (max-width: 900px) {
+				.page-layout {
+					grid-template-columns: 1fr;
+				}
+
+				.sidebar {
+					position: static;
+					display: grid;
+					grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+					gap: 1rem;
+				}
+
+				.sidebar-section {
+					margin-bottom: 0;
+				}
+			}
+
+			@media (max-width: 640px) {
+				.article-title {
+					font-size: 1.5rem;
+				}
+
+				.sidebar {
+					grid-template-columns: 1fr;
+				}
+
+				.toc-depth-3 {
+					padding-left: 1.5rem;
+				}
+			}
+		</style>
 	</body>
 </html>
