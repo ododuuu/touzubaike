@@ -1,0 +1,390 @@
+{
+  "platforms": [
+    {
+      "id": "bitopro",
+      "name": "BitoPro",
+      "chinese_name": "幣託",
+      "aliases": ["幣託", "bito", "BitoPro"],
+      "type": "taiwan_exchange",
+      "keywords": ["bitopro詐騙", "bitopro詐騙手法", "幣託詐騙", "幣託交易所詐騙", "bitopro是詐騙嗎"],
+      "common_scam_types": [
+        {
+          "name": "假客服詐騙",
+          "description": "詐騙集團假冒BitoPro客服，透過電話或訊息聯繫，聲稱帳戶異常需要驗證"
+        },
+        {
+          "name": "釣魚網站",
+          "description": "仿冒BitoPro官網的假網站，URL略有不同，誘騙用戶輸入帳號密碼"
+        },
+        {
+          "name": "人頭帳戶",
+          "description": "詐騙集團利用BitoPro作為洗錢管道，受害者帳戶被標記為人頭帳戶"
+        },
+        {
+          "name": "假投資群組",
+          "description": "在Telegram/Line建立假投資群組，聲稱透過BitoPro投資可獲高額報酬"
+        }
+      ],
+      "official_url": "https://www.bitopro.com",
+      "is_legit": true,
+      "taiwan_licensed": true,
+      "license_info": "金管會核准虛擬通貨交易業者",
+      "warning_signs": [
+        "要求提供私鑰或助記詞",
+        "承諾保證獲利",
+        "要求轉帳到個人帳戶",
+        "網址不是官方域名"
+      ],
+      "official_contact": {
+        "website": "https://www.bitopro.com",
+        "support_email": "support@bitopro.com"
+      }
+    },
+    {
+      "id": "usdt",
+      "name": "USDT",
+      "chinese_name": "泰達幣",
+      "aliases": ["泰達幣", "USDT", "Tether"],
+      "type": "stablecoin",
+      "keywords": ["usdt詐騙", "usdt愛情詐騙", "交友軟體usdt詐騙", "泰達幣詐騙", "usdt是詐騙嗎"],
+      "common_scam_types": [
+        {
+          "name": "愛情詐騙（殺豬盤）",
+          "description": "透過交友軟體認識，建立感情後誘導投資USDT，最終捲款消失"
+        },
+        {
+          "name": "假投資平台",
+          "description": "架設假交易所網站，讓受害者存入USDT後無法提領"
+        },
+        {
+          "name": "高報酬投資詐騙",
+          "description": "聲稱投資USDT可獲得高額利息或報酬，實為龐氏騙局"
+        },
+        {
+          "name": "場外交易詐騙",
+          "description": "假冒幣商進行場外交易，收款後不發幣或發假幣"
+        }
+      ],
+      "is_legit": true,
+      "issuer": "Tether Limited",
+      "warning_signs": [
+        "保證日報酬超過1%",
+        "透過交友軟體認識的投資導師",
+        "無法在主流交易所交易的平台",
+        "要求轉帳到私人錢包"
+      ]
+    },
+    {
+      "id": "okx",
+      "name": "OKX",
+      "chinese_name": "歐易",
+      "aliases": ["歐易", "OKX", "OKEx", "歐易交易所"],
+      "type": "international_exchange",
+      "keywords": ["okx詐騙", "okx詐騙手法", "okx詐騙ptt", "okx詐騙dcard", "歐易詐騙"],
+      "common_scam_types": [
+        {
+          "name": "假OKX官方群組",
+          "description": "在Telegram建立假官方群組，誘導用戶加入並投資"
+        },
+        {
+          "name": "假客服詐騙",
+          "description": "假冒OKX客服聯繫用戶，聲稱帳戶需要升級或解凍"
+        },
+        {
+          "name": "釣魚連結",
+          "description": "發送假OKX登入連結，竊取用戶帳號密碼"
+        },
+        {
+          "name": "假空投活動",
+          "description": "聲稱OKX舉辦空投活動，需要先存入一定金額才能參加"
+        }
+      ],
+      "official_url": "https://www.okx.com",
+      "is_legit": true,
+      "taiwan_licensed": false,
+      "warning_signs": [
+        "要求提供Google Authenticator驗證碼",
+        "非官方域名的連結",
+        "要求先存款才能領空投",
+        "聲稱是官方人員主動聯繫"
+      ],
+      "official_contact": {
+        "website": "https://www.okx.com",
+        "app": "OKX官方App"
+      }
+    },
+    {
+      "id": "bitget",
+      "name": "Bitget",
+      "chinese_name": "Bitget",
+      "aliases": ["Bitget", "幣記"],
+      "type": "international_exchange",
+      "keywords": ["bitget詐騙", "bitget詐騙dcard", "bitget wallet詐騙", "bitget 詐騙"],
+      "common_scam_types": [
+        {
+          "name": "假Bitget Wallet詐騙",
+          "description": "誘導用戶連接錢包到假DApp，授權後竊取資產"
+        },
+        {
+          "name": "假跟單詐騙",
+          "description": "聲稱跟單Bitget上的高手可獲利，實際是詐騙帳號"
+        },
+        {
+          "name": "假官方活動",
+          "description": "假冒Bitget官方舉辦贈幣活動，要求先存款"
+        }
+      ],
+      "official_url": "https://www.bitget.com",
+      "is_legit": true,
+      "taiwan_licensed": false,
+      "warning_signs": [
+        "要求連接錢包到不明網站",
+        "保證跟單獲利",
+        "非官方渠道的活動通知"
+      ]
+    },
+    {
+      "id": "bingx",
+      "name": "BingX",
+      "chinese_name": "BingX",
+      "aliases": ["BingX", "冰棒"],
+      "type": "international_exchange",
+      "keywords": ["bingx詐騙", "bingx交易所詐騙"],
+      "common_scam_types": [
+        {
+          "name": "假跟單詐騙",
+          "description": "聲稱跟單BingX交易員可穩定獲利，誘導入金"
+        },
+        {
+          "name": "假官方客服",
+          "description": "假冒BingX客服聯繫用戶，要求提供帳戶資訊"
+        },
+        {
+          "name": "假贈金活動",
+          "description": "聲稱入金可獲得高額贈金，實際無法提領"
+        }
+      ],
+      "official_url": "https://www.bingx.com",
+      "is_legit": true,
+      "taiwan_licensed": false,
+      "warning_signs": [
+        "跟單保證獲利",
+        "非官方App的下載連結",
+        "要求轉帳到個人帳戶"
+      ]
+    },
+    {
+      "id": "bybit",
+      "name": "Bybit",
+      "chinese_name": "Bybit",
+      "aliases": ["Bybit", "拜比特"],
+      "type": "international_exchange",
+      "keywords": ["bybit詐騙", "bybit詐騙ptt"],
+      "common_scam_types": [
+        {
+          "name": "假合約教學詐騙",
+          "description": "聲稱教導Bybit合約交易，誘導用戶使用其推薦碼入金"
+        },
+        {
+          "name": "假官方群組",
+          "description": "建立假Telegram群組，假冒官方發布投資訊息"
+        },
+        {
+          "name": "假卡片詐騙",
+          "description": "假冒Bybit Card服務，騙取用戶個資"
+        }
+      ],
+      "official_url": "https://www.bybit.com",
+      "is_legit": true,
+      "taiwan_licensed": false,
+      "warning_signs": [
+        "合約交易保證獲利",
+        "要求提供KYC文件到非官方郵箱",
+        "聲稱是Bybit官方人員主動聯繫"
+      ]
+    },
+    {
+      "id": "binance",
+      "name": "Binance",
+      "chinese_name": "幣安",
+      "aliases": ["幣安", "Binance", "幣安交易所"],
+      "type": "international_exchange",
+      "keywords": ["幣安詐騙", "幣安詐騙交友", "binance詐騙", "幣安愛情詐騙", "幣安c2c詐騙"],
+      "common_scam_types": [
+        {
+          "name": "假幣安P2P詐騙",
+          "description": "假冒幣安P2P商家，收款後不放幣或使用假付款截圖"
+        },
+        {
+          "name": "假客服詐騙",
+          "description": "假冒幣安客服聯繫用戶，聲稱帳戶有安全問題"
+        },
+        {
+          "name": "假空投詐騙",
+          "description": "聲稱幣安舉辦空投活動，要求連接錢包或存款"
+        },
+        {
+          "name": "愛情詐騙",
+          "description": "透過交友認識後，聲稱在幣安投資可獲利，誘導入金"
+        }
+      ],
+      "official_url": "https://www.binance.com",
+      "is_legit": true,
+      "taiwan_licensed": false,
+      "warning_signs": [
+        "P2P交易要求線下見面",
+        "官方人員主動聯繫要求驗證",
+        "非binance.com域名的連結",
+        "要求提供2FA驗證碼"
+      ],
+      "official_contact": {
+        "website": "https://www.binance.com",
+        "support": "App內客服"
+      }
+    },
+    {
+      "id": "pionex",
+      "name": "Pionex",
+      "chinese_name": "派網",
+      "aliases": ["派網", "Pionex"],
+      "type": "international_exchange",
+      "keywords": ["pionex詐騙", "派網詐騙"],
+      "common_scam_types": [
+        {
+          "name": "假網格機器人詐騙",
+          "description": "聲稱使用派網網格可穩定獲利，誘導使用其推薦碼入金"
+        },
+        {
+          "name": "假信用卡詐騙",
+          "description": "假冒派網信用卡服務，騙取用戶個資"
+        },
+        {
+          "name": "假官方群組",
+          "description": "建立假Line/Telegram群組，假冒派網官方"
+        }
+      ],
+      "official_url": "https://www.pionex.com",
+      "is_legit": true,
+      "taiwan_licensed": false,
+      "warning_signs": [
+        "網格交易保證獲利",
+        "非官方渠道的客服聯繫",
+        "要求提供API密鑰"
+      ]
+    },
+    {
+      "id": "usdt-romance",
+      "name": "USDT愛情詐騙",
+      "chinese_name": "USDT愛情詐騙",
+      "aliases": ["殺豬盤", "愛情詐騙", "交友詐騙"],
+      "type": "scam_pattern",
+      "keywords": ["usdt愛情詐騙", "交友軟體usdt詐騙", "泰達幣詐騙交友", "區塊鏈詐騙交友"],
+      "common_scam_types": [
+        {
+          "name": "交友軟體搭訕",
+          "description": "在Tinder、探探等交友軟體認識，建立感情後誘導投資"
+        },
+        {
+          "name": "假投資平台",
+          "description": "引導到假交易所存入USDT，初期可小額獲利，後期無法提領"
+        },
+        {
+          "name": "感情勒索",
+          "description": "聲稱自己也投入大筆資金，需要受害者協助"
+        },
+        {
+          "name": "見面騙局",
+          "description": "聲稱見面需要先匯款作為誠意金"
+        }
+      ],
+      "is_legit": false,
+      "warning_signs": [
+        "認識不久就談投資",
+        "對方聲稱在國外工作",
+        "推薦使用不知名的交易所",
+        "初期投資可獲利但後續無法提領",
+        "總是有各種理由不能視訊"
+      ],
+      "recovery_info": {
+        "report_channels": [
+          "165反詐騙專線",
+          "警察局報案",
+          "金融監督管理委員會"
+        ],
+        "recovery_rate": "極低（低於5%）",
+        "tips": [
+          "保留所有對話記錄",
+          "記錄對方帳戶資訊",
+          "不要再匯款",
+          "尋求心理諮商"
+        ]
+      }
+    }
+  ],
+  "common_report_channels": {
+    "taiwan": [
+      {
+        "name": "165反詐騙專線",
+        "phone": "165",
+        "description": "24小時反詐騙諮詢專線"
+      },
+      {
+        "name": "警察局報案",
+        "phone": "110",
+        "description": "需親自到派出所製作筆錄"
+      },
+      {
+        "name": "金管會陳情",
+        "website": "https://www.fsc.gov.tw",
+        "description": "針對金融相關詐騙"
+      },
+      {
+        "name": "刑事局網路犯罪報案",
+        "website": "https://www.cib.gov.tw",
+        "description": "線上報案系統"
+      }
+    ]
+  },
+  "general_warning_signs": [
+    "保證獲利、零風險",
+    "要求提供私鑰或助記詞",
+    "主動聯繫聲稱是官方人員",
+    "使用非官方域名或App",
+    "要求先存款才能提款",
+    "透過社群媒體認識的投資導師",
+    "壓力話術催促立即行動",
+    "無法提供公司登記或牌照"
+  ],
+  "recovery_general_steps": [
+    {
+      "step": 1,
+      "title": "立即停止匯款",
+      "description": "不管對方用什麼理由，都不要再匯任何錢"
+    },
+    {
+      "step": 2,
+      "title": "保留證據",
+      "description": "截圖所有對話記錄、轉帳紀錄、對方帳戶資訊"
+    },
+    {
+      "step": 3,
+      "title": "撥打165",
+      "description": "向165反詐騙專線諮詢，了解是否可追回款項"
+    },
+    {
+      "step": 4,
+      "title": "警局報案",
+      "description": "攜帶證據到派出所製作筆錄"
+    },
+    {
+      "step": 5,
+      "title": "聯繫銀行",
+      "description": "如果是透過銀行轉帳，聯繫銀行嘗試止付"
+    },
+    {
+      "step": 6,
+      "title": "心理支持",
+      "description": "詐騙受害者可能有心理創傷，必要時尋求專業協助"
+    }
+  ]
+}
