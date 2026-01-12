@@ -156,7 +156,31 @@ git push -u origin main
 
 ---
 
-## 六、網站設定修改
+## 八、SEO Agent 系統架構
+
+我們建立一套自動化內容生產系統，透過 Agent Skills 來執行從關鍵字分析到文章發布的流水線。
+
+### 1. 系統環境
+- **語言**: Python 3.x
+- **核心模型**: Google Gemini Pro
+- **數據源**: Google Search Console (CSV)
+
+### 2. Agent Skills 定義
+
+| Skill 名稱 | 功能描述 | 輸入 | 輸出 |
+| :--- | :--- | :--- | :--- |
+| **Skill: Keyword Mining**<br>(關鍵字挖掘) | 讀取 GSC 數據，篩選排名 1~20 且具備高流量潛力的關鍵字。 | `查詢.csv` | `target_keywords.json` |
+| **Skill: SERP Analysis**<br>(競品分析) | 搜尋關鍵字前 3 名，分析 H1-H3 結構與缺口。 | 關鍵字 | `content_brief.json` |
+| **Skill: Content Drafting**<br>(深度撰寫) | 根據大綱呼叫 Gemini 撰寫 Markdown 文章。 | `content_brief.json` | `draft_article.md` |
+| **Skill: SEO Audit**<br>(優化審查) | 依據 `SEO優化檢查清單` 進行自動化檢查。 | `draft_article.md` | `audit_report.json` |
+| **Skill: Auto-Correction**<br>(自動修正) | 若審查失敗，自動修正文章直到通過。 | `audit_report.json` | `final_article.md` |
+
+### 3. 執行流程
+1. **挖掘**: 系統分析 GSC 數據，產出每週建議撰寫清單。
+2. **生成**: 針對清單中的關鍵字，逐一進行競品分析與初稿生成。
+3. **審查**: 自動檢查 SEO 規範（關鍵字密度、H 標籤等）。
+4. **部署**: 通過審查後，自動 Commit 並 Push 到 GitHub，觸發 Cloudflare 部署。
+
 
 ### 修改網站名稱/描述
 編輯 `src/consts.ts`：
