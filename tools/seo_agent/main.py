@@ -157,13 +157,45 @@ def cmd_assemble_and_deploy():
     
     for sec in state.outline.sections:
         if sec.draft_content:
-            content.append(sec.draft_content)
+            # Fix heading levels: H1 -> H2, H2 -> H3, etc.
+            fixed_content = sec.draft_content
+            # Replace lines starting with '# ' (H1) with '## ' (H2)
+            lines = fixed_content.split('\n')
+            fixed_lines = []
+            for line in lines:
+                if line.startswith('# '):
+                    fixed_lines.append('##' + line[1:])  # # Title -> ## Title
+                else:
+                    fixed_lines.append(line)
+            fixed_content = '\n'.join(fixed_lines)
+            content.append(fixed_content)
             content.append("\n---\n")
     
     final_md = "\n".join(content)
     
-    # Save to file
-    filename = f"generated-{state.keyword.replace(' ', '-')}.md"
+    # Generate a clean English slug from the keyword
+    # Mapping common Chinese keywords to English slugs
+    slug_map = {
+        "幣安 Binance 教學": "binance-tutorial",
+        "台灣虛擬貨幣交易所評比": "taiwan-crypto-exchange-comparison",
+        "MAX 交易所教學": "max-exchange-guide",
+        "USDT 是什麼": "what-is-usdt",
+        "加密貨幣入門": "crypto-beginner-guide",
+    }
+    
+    # Try to find a predefined slug, otherwise use a slugified version
+    slug = slug_map.get(state.keyword, None)
+    if not slug:
+        # Fallback: create a simple slug from English words or numbers in keyword
+        import re
+        english_parts = re.findall(r'[a-zA-Z0-9]+', state.keyword)
+        if english_parts:
+            slug = '-'.join(english_parts).lower()
+        else:
+            # Last resort: use a simple hash
+            slug = f"article-{abs(hash(state.keyword)) % 10000}"
+    
+    filename = f"{slug}.md"
     filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../src/content/blog", filename)
     
     with open(filepath, "w", encoding="utf-8") as f:
