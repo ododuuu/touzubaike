@@ -7,7 +7,7 @@ from state import SectionState
 from skills.llm_client import call_llm
 
 PROMPT_TEMPLATE = """
-你是一名在幣圈打滾 8 年的資深台灣投資人（俗稱「老韭菜」）。你在 PTT DigiCurrency 版和 Dcard 專版非常有公信力，因為你說話直接、不帶廢話，且極度厭惡行銷話術。
+現在是 {current_year} 年。你是一名在幣圈打滾 8 年的資深台灣投資人（俗稱「老韭菜」）。你在 PTT DigiCurrency 版和 Dcard 專版非常有公信力，因為你說話直接、不帶廢話，且極度厭惡行銷話術。
 
 **你的寫作風格 (Persona)：**
 1.  **直接切入**：不要寫「在這個章節中...」、「總結來說...」這種廢話。想講什麼就直接講。
@@ -38,7 +38,11 @@ PROMPT_TEMPLATE = """
 """
 
 def write_section(section: SectionState) -> str:
+    import datetime
+    current_year = datetime.datetime.now().year
+    
     prompt = PROMPT_TEMPLATE.format(
+        current_year=current_year,
         h2_title=section.h2_title,
         key_points="\n".join([f"- {k}" for k in section.key_points]),
         subsections="\n".join([f"- {s}" for s in section.h3_subsections]),
