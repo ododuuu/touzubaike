@@ -1,0 +1,84 @@
+{
+  "skills": [
+    {
+      "name": "seo",
+      "displayName": "SEO Content Generator",
+      "description": "Programmatic SEO content generation for scam prevention, exchange guides, and crypto education",
+      "category": "content-generation",
+      "executor": ".claude/skills/seo-wrapper.sh",
+      "usage": "/seo <action> [args]",
+      "actions": [
+        {
+          "name": "generate",
+          "aliases": ["gen"],
+          "description": "Generate single scam prevention page",
+          "usage": "/seo generate <platform-id>",
+          "examples": [
+            "/seo generate bitopro",
+            "/seo generate usdt",
+            "/seo generate okx --dry-run"
+          ]
+        },
+        {
+          "name": "list",
+          "aliases": ["ls"],
+          "description": "List all available platforms",
+          "usage": "/seo list",
+          "examples": [
+            "/seo list"
+          ]
+        },
+        {
+          "name": "batch",
+          "aliases": ["all"],
+          "description": "Batch generate all pages",
+          "usage": "/seo batch [--dry-run]",
+          "examples": [
+            "/seo batch",
+            "/seo batch --dry-run"
+          ]
+        },
+        {
+          "name": "analyze",
+          "aliases": ["check"],
+          "description": "Analyze SEO score of existing page",
+          "usage": "/seo analyze <platform-id>",
+          "examples": [
+            "/seo analyze bitopro",
+            "/seo analyze usdt"
+          ]
+        },
+        {
+          "name": "deploy",
+          "description": "Deploy generated pages to Git",
+          "usage": "/seo deploy",
+          "examples": [
+            "/seo deploy"
+          ]
+        }
+      ],
+      "platforms": [
+        "bitopro",
+        "usdt",
+        "okx",
+        "bitget",
+        "bingx",
+        "bybit",
+        "binance",
+        "pionex",
+        "usdt-romance"
+      ],
+      "config": {
+        "apiKeyRequired": true,
+        "apiKeyEnvVar": "GEMINI_API_KEY",
+        "seoStandards": {
+          "titleLength": "20-60 chars",
+          "descriptionLength": "80-160 chars",
+          "minWordCount": 1500,
+          "minH2Count": 3,
+          "keywordDensity": "3-5 times"
+        }
+      }
+    }
+  ]
+}
