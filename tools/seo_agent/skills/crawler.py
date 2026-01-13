@@ -57,6 +57,10 @@ def crawl_url(url: str) -> Dict[str, Any]:
     Fetches content from a URL and returns a PageData-compatible dictionary using standard libraries.
     """
     try:
+        # Handle non-ASCII characters in URL
+        import urllib.parse
+        url = urllib.parse.quote(url, safe=':/?=&')
+
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }

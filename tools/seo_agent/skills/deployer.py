@@ -17,8 +17,8 @@ def deploy_to_git(file_path: str, commit_message: str) -> bool:
         
         subprocess.run(["git", "add", file_path], cwd=repo_root, check=True)
         subprocess.run(["git", "commit", "-m", commit_message], cwd=repo_root, check=True)
-        # subprocess.run(["git", "push"], cwd=repo_root, check=True) # Commented out for safety in development
-        print("Git commit successful. Push skipped for safety.", file=sys.stderr)
+        subprocess.run(["git", "push"], cwd=repo_root, check=True)
+        print("Git commit and push successful.", file=sys.stderr)
         return True
     except subprocess.CalledProcessError as e:
         print(f"Git Error: {e}", file=sys.stderr)

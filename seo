@@ -1,0 +1,32 @@
+#!/bin/bash
+# SEO Agent Command Wrapper
+# Usage: ./seo "Keyword"
+
+if [ -z "$1" ]; then
+    echo "使用方式: @seo \"您的關鍵字\""
+    exit 1
+fi
+
+KEYWORD="$1"
+echo "🔍 收到指令: @seo 開始為您撰寫關於「$KEYWORD」的文章..."
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Step 1: Research
+echo "\n[1/4] 進行競爭對手研究..."
+python tools/seo_agent/main.py research --keyword "$KEYWORD"
+
+# Step 2: Plan
+echo "\n[2/4] 規劃文章大綱..."
+python tools/seo_agent/main.py plan
+
+# Step 3: Write
+echo "\n[3/4] 撰寫文章內容 (專業分析風格)..."
+python tools/seo_agent/main.py write
+
+# Step 4: Deploy
+echo "\n[4/4] 部署到網站..."
+python tools/seo_agent/main.py deploy
+
+echo "\n✨ 任務完成！"

@@ -2,10 +2,15 @@
 import os
 import json
 import sys
+import urllib.request
+import urllib.error
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Simple abstraction for LLM calls
 # In a real deployment, this would use openai/google-generativeai libraries
-def call_llm(prompt: str, model: str = "gemini-3-pro-preview") -> str:
+def call_llm(prompt: str, model: str = "gemini-2.5-pro") -> str:
     """
     Simulates or performs an LLM call. 
     Checks for API keys in environment variables.
@@ -25,17 +30,17 @@ def call_llm(prompt: str, model: str = "gemini-3-pro-preview") -> str:
             }]
         }
         
-        import urllib.request
-        import urllib.error
-        
         req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
         
         with urllib.request.urlopen(req) as response:
             result = json.loads(response.read().decode('utf-8'))
             # Safe extraction
             if "candidates" in result and result["candidates"]:
-                return result["candidates"][0]["content"]["parts"][0]["text"]
+                text = result["candidates"][0]["content"]["parts"][0]["text"]
+                # print(f"DEBUG: {text}")
+                return text
             else:
+                print(f"LLM Blocked/Empty: {result}", file=sys.stderr)
                 return ""  # Blocked or empty
                 
     except urllib.error.HTTPError as e:
@@ -51,10 +56,23 @@ def parse_json_response(response_text: str) -> dict:
     Cleans and extracts JSON from LLM response (handling markdown fences).
     """
     cleaned = response_text.strip()
+    # Remove conversational prefix if present (naive approach)
+    if cleaned.startswith("好的") or cleaned.startswith("Here"):
+        # Try to find the first '{'
+        start_idx = cleaned.find("{")
+        if start_idx != -1:
+            cleaned = cleaned[start_idx:]
+            
     if cleaned.startswith("```json"):
         cleaned = cleaned[7:]
     if cleaned.startswith("```"):
         cleaned = cleaned[3:]
     if cleaned.endswith("```"):
         cleaned = cleaned[:-3]
+        
+    # Find the last '}'
+    end_idx = cleaned.rfind("}")
+    if end_idx != -1:
+        cleaned = cleaned[:end_idx+1]
+        
     return json.loads(cleaned.strip())

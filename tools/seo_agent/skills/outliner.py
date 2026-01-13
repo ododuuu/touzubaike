@@ -49,9 +49,10 @@ def generate_outline(keyword: str, analysis: CompetitorAnalysis) -> MasterOutlin
         avg_count=analysis.avg_word_count,
         common_topics=json.dumps(analysis.common_topics[:10], ensure_ascii=False),
         target_count=target_count
-    )
+    ) + "\n\nIMPORTANT: Return ONLY the raw JSON object. Do not wrap in markdown code blocks. Do not add any conversational text before or after."
     
     response = call_llm(prompt)
+    print(f"DEBUG OUTLINE RESPONSE: {response[:100]}...") # Add debug print
     
     if response == "MOCKED_LLM_RESPONSE":
         # Return a dummy outline for testing workflow
