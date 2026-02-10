@@ -1,0 +1,43 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { title, description } = Astro.props;
+const fullTitle = `${title} - ${SITE_TITLE}`;
+---
+
+<html lang="zh-TW">
+	<head>
+		<BaseHead title={fullTitle} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="tool-container">
+				<slot />
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.tool-container {
+		max-width: 700px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem;
+	}
+
+	@media (max-width: 640px) {
+		.tool-container {
+			padding: 1.5rem 1rem;
+		}
+	}
+</style>

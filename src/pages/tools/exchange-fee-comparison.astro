@@ -1,0 +1,207 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import fees from '../../data/exchange-fees.json';
+
+const pageTitle = "加密貨幣交易所手續費比較";
+const pageDescription = "比較幣安 Binance、MAX、OKX 等主流交易所的現貨與合約手續費，一表看清 Maker 與 Taker 費率差異。";
+---
+
+<ToolLayout title={pageTitle} description={pageDescription}>
+	<h1>{pageTitle}</h1>
+
+	<div class="fee-card">
+		<div class="tabs">
+			<button class="tab active" data-type="spot">現貨交易</button>
+			<button class="tab" data-type="futures">合約交易</button>
+		</div>
+
+		<div class="table-wrapper">
+			<table>
+				<thead>
+					<tr>
+						<th>交易所</th>
+						<th>Maker（掛單）</th>
+						<th>Taker（吃單）</th>
+					</tr>
+				</thead>
+				<tbody id="table-body">
+				</tbody>
+			</table>
+		</div>
+
+		<div class="fee-disclaimer">
+			⚠️ 實際費率以各交易所官方公告為準，此表格僅供參考。部分交易所可透過持有平台幣或提升 VIP 等級獲得手續費折扣。
+		</div>
+
+		<p class="updated-text">最後更新：{fees.last_updated}</p>
+	</div>
+
+	<div class="info-section">
+		<h2>Maker 和 Taker 是什麼？</h2>
+		<p>
+			<strong>Maker（掛單）</strong>是指在訂單簿中掛出限價單，為市場提供流動性的交易者，通常享有較低手續費。
+			<strong>Taker（吃單）</strong>是指直接以市價成交的交易者，會消耗訂單簿中的流動性，手續費通常較高。
+		</p>
+		<h2>如何降低手續費？</h2>
+		<p>
+			大多數交易所都提供 VIP 等級制度，交易量越大、手續費越低。此外，持有交易所平台幣（如 BNB）通常也能獲得手續費折扣。
+		</p>
+	</div>
+</ToolLayout>
+
+<style>
+	h1 {
+		font-size: 1.75rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.fee-card {
+		background: var(--bg-card, #16213e);
+		border: 1px solid var(--border, #2d3748);
+		border-radius: 12px;
+		padding: 1.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.tabs {
+		display: flex;
+		gap: 0.5rem;
+		margin-bottom: 1.25rem;
+	}
+
+	.tab {
+		padding: 0.6rem 1.25rem;
+		border: 2px solid var(--border, #2d3748);
+		background: transparent;
+		color: var(--text-secondary, #94a3b8);
+		border-radius: 6px;
+		cursor: pointer;
+		font-weight: 500;
+		font-size: 0.9rem;
+		transition: all 0.2s;
+	}
+
+	.tab:hover {
+		border-color: var(--accent, #d4a574);
+		color: var(--accent, #d4a574);
+	}
+
+	.tab.active {
+		background: var(--accent, #d4a574);
+		color: var(--bg-primary, #0f0f1a);
+		border-color: var(--accent, #d4a574);
+		font-weight: 600;
+	}
+
+	.table-wrapper {
+		overflow-x: auto;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 0;
+	}
+
+	th, td {
+		padding: 0.75rem 1rem;
+		text-align: left;
+		border: 1px solid var(--border, #2d3748);
+	}
+
+	th {
+		background: var(--bg-secondary, #1a1a2e);
+		color: var(--text-primary, #f1f5f9);
+		font-weight: 600;
+		font-size: 0.85rem;
+	}
+
+	td {
+		color: var(--text-secondary, #94a3b8);
+		font-size: 0.9rem;
+	}
+
+	td:first-child {
+		font-weight: 600;
+		color: var(--text-primary, #f1f5f9);
+	}
+
+	.fee-disclaimer {
+		margin-top: 1.25rem;
+		padding: 0.75rem 1rem;
+		background: rgba(212, 165, 116, 0.08);
+		border: 1px solid rgba(212, 165, 116, 0.2);
+		border-radius: 6px;
+		font-size: 0.8rem;
+		color: var(--text-muted, #64748b);
+	}
+
+	.updated-text {
+		margin-top: 0.75rem;
+		font-size: 0.75rem;
+		color: var(--text-muted, #64748b);
+	}
+
+	.info-section h2 {
+		font-size: 1.25rem;
+		margin-top: 2rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border, #2d3748);
+	}
+
+	.info-section h2:first-child {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: none;
+	}
+
+	.info-section p {
+		color: var(--text-secondary, #94a3b8);
+		line-height: 1.8;
+	}
+
+	@media (max-width: 640px) {
+		h1 {
+			font-size: 1.4rem;
+		}
+
+		.fee-card {
+			padding: 1.25rem;
+		}
+
+		th, td {
+			padding: 0.6rem 0.75rem;
+			font-size: 0.85rem;
+		}
+	}
+</style>
+
+<script define:vars={{ fees }}>
+	const tableBody = document.getElementById('table-body');
+	const tabs = document.querySelectorAll('.tab');
+
+	function renderTable(type) {
+		const data = fees[type];
+		if (!tableBody || !data) return;
+
+		tableBody.innerHTML = Object.entries(data)
+			.map(([_, exchange]) => `
+				<tr>
+					<td>${exchange.name}</td>
+					<td>${exchange.maker}%</td>
+					<td>${exchange.taker}%</td>
+				</tr>
+			`).join('');
+	}
+
+	tabs.forEach(tab => {
+		tab.addEventListener('click', () => {
+			tabs.forEach(t => t.classList.remove('active'));
+			tab.classList.add('active');
+			renderTable(tab.dataset.type);
+		});
+	});
+
+	// 初始渲染
+	renderTable('spot');
+</script>

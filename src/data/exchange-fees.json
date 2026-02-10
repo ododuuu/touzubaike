@@ -1,0 +1,13 @@
+{
+  "last_updated": "2026-02-10",
+  "spot": {
+    "binance": { "name": "幣安 Binance", "maker": 0.1, "taker": 0.1 },
+    "max": { "name": "MAX", "maker": 0.05, "taker": 0.15 },
+    "okx": { "name": "OKX", "maker": 0.08, "taker": 0.1 }
+  },
+  "futures": {
+    "binance": { "name": "幣安 Binance", "maker": 0.02, "taker": 0.05 },
+    "max": { "name": "MAX", "maker": 0.02, "taker": 0.06 },
+    "okx": { "name": "OKX", "maker": 0.02, "taker": 0.05 }
+  }
+}

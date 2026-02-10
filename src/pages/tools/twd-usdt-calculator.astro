@@ -1,0 +1,261 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+
+const pageTitle = "台幣 USDT 即時匯率計算器";
+const pageDescription = "免費台幣轉 USDT 計算器，即時匯率自動更新，支援台幣與 USDT 雙向轉換。快速查詢泰達幣匯率。";
+---
+
+<ToolLayout title={pageTitle} description={pageDescription}>
+	<h1>{pageTitle}</h1>
+
+	<div class="calculator-card">
+		<div id="calculator-root">
+			<div class="loading-state">
+				<div class="spinner"></div>
+				<p>正在取得即時匯率...</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="info-section">
+		<h2>什麼是 USDT？</h2>
+		<p>
+			USDT（泰達幣）是全球最大的美元穩定幣，由 Tether 公司發行，1 USDT 的價值約等於 1 美元。
+			在台灣，許多投資者會透過交易所將台幣兌換成 USDT，再進行加密貨幣交易。
+		</p>
+		<h2>如何使用此計算器？</h2>
+		<p>
+			在上方輸入台幣金額，系統會自動換算成對應的 USDT 數量；反之亦然。
+			匯率資料來自 CoinGecko，每次載入頁面時自動更新。
+		</p>
+	</div>
+</ToolLayout>
+
+<style>
+	h1 {
+		font-size: 1.75rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.calculator-card {
+		background: var(--bg-card, #16213e);
+		border: 1px solid var(--border, #2d3748);
+		border-radius: 12px;
+		padding: 1.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.loading-state {
+		text-align: center;
+		padding: 2rem 0;
+	}
+
+	.loading-state p {
+		color: var(--text-muted, #64748b);
+		margin: 0.75rem 0 0 0;
+		font-size: 0.9rem;
+	}
+
+	.spinner {
+		width: 32px;
+		height: 32px;
+		border: 3px solid var(--border, #2d3748);
+		border-top-color: var(--accent, #d4a574);
+		border-radius: 50%;
+		margin: 0 auto;
+		animation: spin 0.8s linear infinite;
+	}
+
+	@keyframes spin {
+		to { transform: rotate(360deg); }
+	}
+
+	/* Calculator rendered elements */
+	:global(.rate-display) {
+		background: rgba(212, 165, 116, 0.1);
+		border-left: 4px solid var(--accent, #d4a574);
+		padding: 1rem 1.25rem;
+		border-radius: 0 8px 8px 0;
+		margin-bottom: 1.5rem;
+	}
+
+	:global(.rate-display .rate-text) {
+		margin: 0 0 0.25rem 0;
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: var(--accent, #d4a574);
+	}
+
+	:global(.rate-display .rate-time) {
+		color: var(--text-muted, #64748b);
+		font-size: 0.8rem;
+		margin: 0;
+	}
+
+	:global(.calc-input-group) {
+		margin-bottom: 1rem;
+	}
+
+	:global(.calc-input-group label) {
+		display: block;
+		margin-bottom: 0.4rem;
+		font-weight: 500;
+		color: var(--text-secondary, #94a3b8);
+		font-size: 0.9rem;
+	}
+
+	:global(.calc-input-group input) {
+		width: 100%;
+		padding: 0.75rem 1rem;
+		background: var(--bg-secondary, #1a1a2e);
+		border: 2px solid var(--border, #2d3748);
+		border-radius: 8px;
+		font-size: 1rem;
+		color: var(--text-primary, #f1f5f9);
+		box-sizing: border-box;
+		transition: border-color 0.2s;
+	}
+
+	:global(.calc-input-group input::placeholder) {
+		color: var(--text-muted, #64748b);
+	}
+
+	:global(.calc-input-group input:focus) {
+		outline: none;
+		border-color: var(--accent, #d4a574);
+	}
+
+	:global(.swap-icon) {
+		text-align: center;
+		font-size: 1.25rem;
+		margin: 0.5rem 0;
+		color: var(--text-muted, #64748b);
+	}
+
+	:global(.calc-disclaimer) {
+		margin-top: 1.25rem;
+		padding: 0.75rem 1rem;
+		background: rgba(212, 165, 116, 0.08);
+		border: 1px solid rgba(212, 165, 116, 0.2);
+		border-radius: 6px;
+		font-size: 0.8rem;
+		color: var(--text-muted, #64748b);
+	}
+
+	.info-section h2 {
+		font-size: 1.25rem;
+		margin-top: 2rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border, #2d3748);
+	}
+
+	.info-section h2:first-child {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: none;
+	}
+
+	.info-section p {
+		color: var(--text-secondary, #94a3b8);
+		line-height: 1.8;
+	}
+
+	@media (max-width: 640px) {
+		h1 {
+			font-size: 1.4rem;
+		}
+
+		.calculator-card {
+			padding: 1.25rem;
+		}
+	}
+</style>
+
+<script>
+	const root = document.getElementById('calculator-root');
+	let currentRate: number | null = null;
+
+	// 取得即時匯率
+	fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=twd')
+		.then(res => res.json())
+		.then(data => {
+			currentRate = data.tether.twd;
+			renderCalculator();
+		})
+		.catch(err => {
+			console.error('CoinGecko API Error:', err);
+			currentRate = 31.5; // fallback 匯率
+			renderCalculator();
+		});
+
+	function renderCalculator() {
+		if (!root || currentRate === null) return;
+
+		const now = new Date().toLocaleString('zh-TW', {
+			year: 'numeric',
+			month: '2-digit',
+			day: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+		});
+
+		root.innerHTML = `
+			<div class="rate-display">
+				<p class="rate-text">即時匯率：1 USDT ≈ ${currentRate.toFixed(2)} TWD</p>
+				<p class="rate-time">最後更新：${now}</p>
+			</div>
+
+			<div class="calc-input-group">
+				<label for="twd-input">台幣 (TWD)</label>
+				<input
+					type="number"
+					id="twd-input"
+					placeholder="輸入台幣金額"
+					step="0.01"
+					min="0"
+					inputmode="decimal"
+				/>
+			</div>
+
+			<div class="swap-icon">⇅</div>
+
+			<div class="calc-input-group">
+				<label for="usdt-input">USDT</label>
+				<input
+					type="number"
+					id="usdt-input"
+					placeholder="輸入 USDT 金額"
+					step="0.01"
+					min="0"
+					inputmode="decimal"
+				/>
+			</div>
+
+			<div class="calc-disclaimer">
+				⚠️ 此為參考匯率，實際交易價格以各交易所為準。匯率資料來源：CoinGecko
+			</div>
+		`;
+
+		// 綁定雙向計算事件
+		const twdInput = document.getElementById('twd-input') as HTMLInputElement;
+		const usdtInput = document.getElementById('usdt-input') as HTMLInputElement;
+
+		twdInput.addEventListener('input', () => {
+			const twd = parseFloat(twdInput.value);
+			if (!isNaN(twd) && twd >= 0 && currentRate) {
+				usdtInput.value = (twd / currentRate).toFixed(2);
+			} else {
+				usdtInput.value = '';
+			}
+		});
+
+		usdtInput.addEventListener('input', () => {
+			const usdt = parseFloat(usdtInput.value);
+			if (!isNaN(usdt) && usdt >= 0 && currentRate) {
+				twdInput.value = (usdt * currentRate).toFixed(2);
+			} else {
+				twdInput.value = '';
+			}
+		});
+	}
+</script>

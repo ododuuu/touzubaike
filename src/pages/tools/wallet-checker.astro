@@ -1,0 +1,264 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+
+const pageTitle = "USDT 錢包地址查詢工具";
+const pageDescription = "輸入 TRC20 錢包地址，即時查詢 TRX 餘額與交易次數。免費 USDT 錢包地址驗證工具。";
+---
+
+<ToolLayout title={pageTitle} description={pageDescription}>
+	<h1>{pageTitle}</h1>
+
+	<div class="checker-card">
+		<div class="input-group">
+			<label for="address-input">錢包地址（TRC20）</label>
+			<input
+				type="text"
+				id="address-input"
+				placeholder="輸入 USDT (TRC20) 錢包地址，例如 T..."
+				spellcheck="false"
+				autocomplete="off"
+			/>
+		</div>
+
+		<button class="check-btn" id="check-button">查詢</button>
+
+		<div id="result"></div>
+
+		<div class="checker-disclaimer">
+			⚠️ 本工具僅查詢 TRON (TRC20) 網路上的地址資訊，資料來源：TronScan
+		</div>
+	</div>
+
+	<div class="info-section">
+		<h2>什麼是 TRC20 地址？</h2>
+		<p>
+			TRC20 是 TRON 區塊鏈上的代幣標準，USDT-TRC20 是目前最常用的 USDT 轉帳方式之一，
+			因其手續費低、到帳速度快而廣受歡迎。TRC20 地址以字母「T」開頭，長度為 34 個字元。
+		</p>
+		<h2>如何使用此工具？</h2>
+		<p>
+			在上方輸入框中貼上要查詢的 TRC20 錢包地址，點擊「查詢」按鈕，即可查看該地址的 TRX 餘額與交易次數。
+			可用於確認地址是否有效、是否曾有交易紀錄。
+		</p>
+	</div>
+</ToolLayout>
+
+<style>
+	h1 {
+		font-size: 1.75rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.checker-card {
+		background: var(--bg-card, #16213e);
+		border: 1px solid var(--border, #2d3748);
+		border-radius: 12px;
+		padding: 1.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.input-group {
+		margin-bottom: 1rem;
+	}
+
+	.input-group label {
+		display: block;
+		margin-bottom: 0.4rem;
+		font-weight: 500;
+		color: var(--text-secondary, #94a3b8);
+		font-size: 0.9rem;
+	}
+
+	.input-group input {
+		width: 100%;
+		padding: 0.75rem 1rem;
+		background: var(--bg-secondary, #1a1a2e);
+		border: 2px solid var(--border, #2d3748);
+		border-radius: 8px;
+		font-size: 0.875rem;
+		color: var(--text-primary, #f1f5f9);
+		box-sizing: border-box;
+		font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+		transition: border-color 0.2s;
+	}
+
+	.input-group input::placeholder {
+		color: var(--text-muted, #64748b);
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	}
+
+	.input-group input:focus {
+		outline: none;
+		border-color: var(--accent, #d4a574);
+	}
+
+	.check-btn {
+		width: 100%;
+		padding: 0.75rem;
+		background: var(--accent, #d4a574);
+		color: var(--bg-primary, #0f0f1a);
+		border: none;
+		border-radius: 8px;
+		font-size: 1rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background 0.2s;
+	}
+
+	.check-btn:hover {
+		background: var(--accent-hover, #e8c19a);
+	}
+
+	.check-btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	/* Result styles with :global since they're injected via JS */
+	:global(.wallet-result) {
+		margin-top: 1.25rem;
+		padding: 1rem 1.25rem;
+		border-radius: 8px;
+	}
+
+	:global(.wallet-result.success) {
+		background: rgba(34, 197, 94, 0.1);
+		border: 1px solid rgba(34, 197, 94, 0.3);
+	}
+
+	:global(.wallet-result.error) {
+		background: rgba(239, 68, 68, 0.1);
+		border: 1px solid rgba(239, 68, 68, 0.3);
+	}
+
+	:global(.wallet-result .result-item) {
+		margin: 0.5rem 0;
+		font-size: 0.9rem;
+		color: var(--text-secondary, #94a3b8);
+	}
+
+	:global(.wallet-result .result-item strong) {
+		display: inline-block;
+		min-width: 80px;
+		color: var(--text-primary, #f1f5f9);
+	}
+
+	:global(.wallet-result .result-item .mono) {
+		font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+		font-size: 0.85rem;
+		word-break: break-all;
+	}
+
+	:global(.wallet-result.error p) {
+		margin: 0;
+		color: #fca5a5;
+		font-size: 0.9rem;
+	}
+
+	.checker-disclaimer {
+		margin-top: 1.25rem;
+		padding: 0.75rem 1rem;
+		background: rgba(212, 165, 116, 0.08);
+		border: 1px solid rgba(212, 165, 116, 0.2);
+		border-radius: 6px;
+		font-size: 0.8rem;
+		color: var(--text-muted, #64748b);
+	}
+
+	.info-section h2 {
+		font-size: 1.25rem;
+		margin-top: 2rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border, #2d3748);
+	}
+
+	.info-section h2:first-child {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: none;
+	}
+
+	.info-section p {
+		color: var(--text-secondary, #94a3b8);
+		line-height: 1.8;
+	}
+
+	@media (max-width: 640px) {
+		h1 {
+			font-size: 1.4rem;
+		}
+
+		.checker-card {
+			padding: 1.25rem;
+		}
+	}
+</style>
+
+<script>
+	const input = document.getElementById('address-input') as HTMLInputElement;
+	const button = document.getElementById('check-button') as HTMLButtonElement;
+	const result = document.getElementById('result') as HTMLDivElement;
+
+	// Enter 鍵觸發查詢
+	input.addEventListener('keydown', (e) => {
+		if (e.key === 'Enter') {
+			button.click();
+		}
+	});
+
+	button.addEventListener('click', async () => {
+		const address = input.value.trim();
+
+		// 驗證地址格式（TRON 地址以 T 開頭，長度 34）
+		if (!address || !address.startsWith('T') || address.length !== 34) {
+			result.innerHTML = `
+				<div class="wallet-result error">
+					<p>❌ 請輸入有效的 TRC20 地址（以 T 開頭，共 34 個字元）</p>
+				</div>
+			`;
+			return;
+		}
+
+		button.disabled = true;
+		button.textContent = '查詢中...';
+		result.innerHTML = '';
+
+		try {
+			const response = await fetch(
+				`https://apilist.tronscan.org/api/account?address=${address}`
+			);
+
+			if (!response.ok) throw new Error('查詢失敗，請稍後再試');
+
+			const data = await response.json();
+
+			const trxBalance = (data.balance / 1_000_000).toFixed(2);
+			const txCount = data.transactions || 0;
+			const shortAddr = `${address.slice(0, 10)}...${address.slice(-10)}`;
+
+			result.innerHTML = `
+				<div class="wallet-result success">
+					<div class="result-item">
+						<strong>地址：</strong>
+						<span class="mono">${shortAddr}</span>
+					</div>
+					<div class="result-item">
+						<strong>TRX 餘額：</strong>${trxBalance} TRX
+					</div>
+					<div class="result-item">
+						<strong>交易次數：</strong>${txCount.toLocaleString()} 筆
+					</div>
+				</div>
+			`;
+		} catch (error: any) {
+			result.innerHTML = `
+				<div class="wallet-result error">
+					<p>❌ ${error.message || '查詢失敗，請檢查地址後重試'}</p>
+				</div>
+			`;
+		} finally {
+			button.disabled = false;
+			button.textContent = '查詢';
+		}
+	});
+</script>
